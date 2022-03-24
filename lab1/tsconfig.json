@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "build",
+    "target": "es2020",
+    "strict": true,
+    "strictNullChecks": true,
+    "alwaysStrict": false
+  },
+  "include": ["taylor.ts"]
+}
