@@ -41,7 +41,7 @@ function normalizeX(x: number) {
   }
 
   if (moduloX <= 1.5 * Math.PI) {
-    return moduloX - Math.PI;
+    return moduloX - 2 * Math.PI;
   }
 
   return 2 * Math.PI - moduloX;
