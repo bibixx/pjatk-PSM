@@ -6,8 +6,8 @@ const factorialMemo: Record<number, number> = {};
 
 // =========================== Taylor ===========================
 function sin(x: number, precision: number) {
-  let sum = x;
   const normalizedX = normalizeX(x);
+  let sum = normalizedX;
 
   for (let p = 2; p <= precision; p++) {
     const part = sinPart(normalizedX, p);
@@ -32,15 +32,15 @@ function sinPart(x: number, n: number) {
 function normalizeX(x: number) {
   const moduloX = x % (2 * Math.PI);
 
-  if (moduloX < 0.5 * Math.PI) {
+  if (moduloX <= 0.5 * Math.PI) {
     return moduloX;
   }
 
-  if (moduloX < Math.PI) {
+  if (moduloX <= Math.PI) {
     return Math.PI - moduloX;
   }
 
-  if (moduloX < 1.5 * Math.PI) {
+  if (moduloX <= 1.5 * Math.PI) {
     return moduloX - Math.PI;
   }
 
