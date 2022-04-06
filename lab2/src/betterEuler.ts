@@ -23,7 +23,7 @@ export const getDataPoints = (
     const lastPoint = dataPoints.at(-1)!;
 
     const a_x = getA(m, g.x, q, lastPoint.V.x);
-    const a_y = getA(m, g.y, q, lastPoint.V.x);
+    const a_y = getA(m, g.y, q, lastPoint.V.y);
 
     const V_x_2 = getV(dt / 2, lastPoint.V.x, a_x);
     const V_y_2 = getV(dt / 2, lastPoint.V.y, a_y);

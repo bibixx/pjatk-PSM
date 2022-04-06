@@ -31,7 +31,7 @@ tbody td:not(:first-child) {
 }
 
 thead th {
-  text-align: center;
+  text-align: left;
 }
 
 .chart-options-container {

@@ -7,7 +7,8 @@
     "start:serve": "browser-sync public --port 3000 --server --files 'public/*'",
     "start:build": "npm run build -- --watch",
     "start": "concurrently 'npm:start:build' 'npm:start:serve'",
-    "build": "esbuild ./src/{display,euler,betterEuler}.ts --target=chrome100 --outdir=public --bundle"
+    "build": "esbuild ./src/{display,euler,betterEuler}.ts --target=chrome100 --outdir=public --bundle",
+    "bundle": "inline-script-tags public/index.html public/index.html.tmp && inline-stylesheets public/index.html.tmp build/index.html && rm public/index.html.tmp"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
     "browser-sync": "^2.27.9",
     "concurrently": "^7.1.0",
     "esbuild": "^0.14.31",
+    "inline-scripts": "^1.7.4",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.2"
   }
