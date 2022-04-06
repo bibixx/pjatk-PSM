@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spcss@0.8.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Metoda Eulera vs Ulepszona Metoda Eulera</title>
+  </head>
+  <body>
+    <div class="chart-options-container">
+      <div class="options">
+        <table>
+          <thead>
+            <tr>
+              <th colspan="2">Dane Wejściowe</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Δt</td>
+              <td><input type="number" name="dt" id="dt" step="0.01" min="0.01" /></td>
+            </tr>
+            <tr>
+              <td>t<sub>total</sub></td>
+              <td><input type="number" name="totalT" id="totalT" step="0.1" /></td>
+            </tr>
+            <tr>
+              <td>s<sub>x0</sub></td>
+              <td><input type="number" name="s_0_x" id="s_0_x" /></td>
+            </tr>
+            <tr>
+              <td>s<sub>y0</sub></td>
+              <td><input type="number" name="s_0_y" id="s_0_y" /></td>
+            </tr>
+            <tr>
+              <td>V<sub>x0</sub></td>
+              <td><input type="number" name="V_0_x" id="V_0_x" /></td>
+            </tr>
+            <tr>
+              <td>V<sub>y0</sub></td>
+              <td><input type="number" name="V_0_y" id="V_0_y" /></td>
+            </tr>
+            <tr>
+              <td>g<sub>x</sub></td>
+              <td><input type="number" name="g_x" id="g_x" /></td>
+            </tr>
+            <tr>
+              <td>g<sub>y</sub></td>
+              <td><input type="number" name="g_y" id="g_y" /></td>
+            </tr>
+            <tr>
+              <td>a<sub>x0</sub></td>
+              <td><input type="number" name="a_0_x" id="a_0_x" /></td>
+            </tr>
+            <tr>
+              <td>a<sub>y0</sub></td>
+              <td><input type="number" name="a_0_y" id="a_0_y" /></td>
+            </tr>
+            <tr>
+              <td>m</td>
+              <td><input type="number" name="m" id="m" /></td>
+            </tr>
+            <tr>
+              <td>q</td>
+              <td><input type="number" name="q" id="q" step="0.1" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="canvas-container">
+        <canvas id="myChart"></canvas>
+      </div>
+    </div>
+    <div class="tables-wrapper">
+      <table id="euler"></table>
+      <table id="betterEuler"></table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./display.js"></script>
+  </body>
+</html>
