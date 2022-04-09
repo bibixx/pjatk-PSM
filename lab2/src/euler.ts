@@ -25,8 +25,8 @@ export const getDataPoints = (
     const s_y = getS(dt, lastPoint.s.y, lastPoint.V.y);
     const V_x = getV(dt, lastPoint.V.x, lastPoint.a.x);
     const V_y = getV(dt, lastPoint.V.y, lastPoint.a.y);
-    const a_x = getA(m, g.x, q, lastPoint.V.x);
-    const a_y = getA(m, g.y, q, lastPoint.V.y);
+    const a_x = getA(m, g.x, q, V_x);
+    const a_y = getA(m, g.y, q, V_y);
 
     dataPoints.push({
       s: new Vector(s_x, s_y),

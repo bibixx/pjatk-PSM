@@ -22,20 +22,20 @@ export const getDataPoints = (
   for (let i = 0; i < range; i++) {
     const lastPoint = dataPoints.at(-1)!;
 
-    const a_x = getA(m, g.x, q, lastPoint.V.x);
-    const a_y = getA(m, g.y, q, lastPoint.V.y);
+    const V_x_2 = getV(dt / 2, lastPoint.V.x, lastPoint.a.x);
+    const V_y_2 = getV(dt / 2, lastPoint.V.y, lastPoint.a.y);
 
-    const V_x_2 = getV(dt / 2, lastPoint.V.x, a_x);
-    const V_y_2 = getV(dt / 2, lastPoint.V.y, a_y);
+    const s_x = getS(dt, lastPoint.s.x, V_x_2);
+    const s_y = getS(dt, lastPoint.s.y, V_y_2);
 
-    const a_x_2 = getA(m, g.x, q, lastPoint.V.x);
-    const a_y_2 = getA(m, g.y, q, lastPoint.V.x);
+    const a_x_2 = getA(m, g.x, q, V_x_2);
+    const a_y_2 = getA(m, g.y, q, V_y_2);
 
     const V_x = getV(dt, lastPoint.V.x, a_x_2);
     const V_y = getV(dt, lastPoint.V.y, a_y_2);
 
-    const s_x = getS(dt, lastPoint.s.x, V_x_2);
-    const s_y = getS(dt, lastPoint.s.y, V_y_2);
+    const a_x = getA(m, g.x, q, V_x);
+    const a_y = getA(m, g.y, q, V_y);
 
     dataPoints.push({
       s: new Vector(s_x, s_y),
