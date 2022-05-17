@@ -1,0 +1,46 @@
+body {
+  padding: 2rem 7rem;
+  max-width: unset;
+  --nth-background: rgba(0, 0, 0, 0.1);
+  --hover-background: rgba(0, 0, 0, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    --nth-background: rgba(255, 255, 255, 0.1);
+    --hover-background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+table {
+  width: 100%;
+  margin: 2rem 0;
+}
+
+table tbody tr:nth-child(2n + 1) {
+  background: var(--nth-background);
+}
+
+table tbody tr:hover {
+  background: var(--hover-background);
+}
+
+tbody td:not(:first-child) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+thead th {
+  text-align: left;
+}
+
+.chart-options-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 2rem;
+}
+
+.tables-wrapper {
+  width: 100%;
+  overflow: auto;
+}
