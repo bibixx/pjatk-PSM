@@ -46,47 +46,6 @@ for (let y = 1; y <= SIZE; y++) {
 
 const S = solveEquation(A, B);
 
-/* ================= DRAW ================= */
-const sketch = (p: p5) => {
-  p.setup = function () {
-    p.createCanvas(SIZE + 2, SIZE + 2);
-    p.noLoop();
-  };
-
-  p.draw = function () {
-    p.background(0);
-
-    const minValue = Math.min(BOTTOM, LEFT, TOP, RIGHT);
-    const maxValue = Math.max(BOTTOM, LEFT, TOP, RIGHT);
-
-    p.loadPixels();
-
-    for (let y = 0; y <= SIZE + 1; y++) {
-      for (let x = 0; x <= SIZE + 1; x++) {
-        if ((x === 0 || x === SIZE + 1) && (x === y || x === SIZE + 1 - y)) {
-          continue;
-        }
-
-        const point: Point = [x, y];
-        const canvasPoint: Point = [x, SIZE + 1 - y];
-        const temp = getTemperature(point) ?? S.get([linearizePointWithoutEdges(point)]);
-        const linearPosition = linearizePoint(canvasPoint) * 4;
-        const red = p.map(temp, minValue, maxValue, 200, 30);
-        const green = p.map(temp, minValue, maxValue, 30, 255);
-        const blue = 0;
-
-        p.pixels[linearPosition] = red;
-        p.pixels[linearPosition + 1] = green;
-        p.pixels[linearPosition + 2] = blue;
-        p.pixels[linearPosition + 3] = 255;
-      }
-    }
-    p.updatePixels();
-  };
-};
-
-new p5(sketch);
-
 /* ================= UTILS ================= */
 function solveEquation(A: math.Matrix, B: math.Matrix) {
   const A1 = math.inv(A);
@@ -153,3 +112,44 @@ function getTemperature([x, y]: Point): number | undefined {
     return TOP;
   }
 }
+
+/* ================= DRAW ================= */
+const sketch = (p: p5) => {
+  p.setup = function () {
+    p.createCanvas(SIZE + 2, SIZE + 2);
+    p.noLoop();
+  };
+
+  p.draw = function () {
+    p.background(0);
+
+    const minValue = Math.min(BOTTOM, LEFT, TOP, RIGHT);
+    const maxValue = Math.max(BOTTOM, LEFT, TOP, RIGHT);
+
+    p.loadPixels();
+
+    for (let y = 0; y <= SIZE + 1; y++) {
+      for (let x = 0; x <= SIZE + 1; x++) {
+        if ((x === 0 || x === SIZE + 1) && (x === y || x === SIZE + 1 - y)) {
+          continue;
+        }
+
+        const point: Point = [x, y];
+        const canvasPoint: Point = [x, SIZE + 1 - y];
+        const temp = getTemperature(point) ?? S.get([linearizePointWithoutEdges(point)]);
+        const linearPosition = linearizePoint(canvasPoint) * 4;
+        const red = p.map(temp, minValue, maxValue, 200, 30);
+        const green = p.map(temp, minValue, maxValue, 30, 255);
+        const blue = 0;
+
+        p.pixels[linearPosition] = red;
+        p.pixels[linearPosition + 1] = green;
+        p.pixels[linearPosition + 2] = blue;
+        p.pixels[linearPosition + 3] = 255;
+      }
+    }
+    p.updatePixels();
+  };
+};
+
+new p5(sketch);
