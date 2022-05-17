@@ -14,11 +14,13 @@
   "author": "",
   "license": "GPL-3.0",
   "dependencies": {
+    "@types/p5": "^1.4.2",
     "browser-sync": "^2.27.9",
     "concurrently": "^7.1.0",
     "esbuild": "^0.14.31",
     "inline-scripts": "^1.7.4",
     "mathjs": "^10.5.3",
+    "p5": "^1.4.1",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.2"
   }

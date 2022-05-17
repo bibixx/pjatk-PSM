@@ -1,18 +1,101 @@
 import * as math from "mathjs";
+import p5 from "p5";
 
-const solveEquation = (A: math.Matrix, B: math.Matrix) => {
-  console.time("INVERT");
-  const A1 = math.inv(A);
-  console.timeEnd("INVERT");
+/* ================= PARAMETERS ================= */
+const BOTTOM = 150;
+const LEFT = 100;
+const TOP = 50;
+const RIGHT = 200;
+const SIZE = 40;
 
-  console.time("MULTIPLY");
-  const S = math.multiply(A1, B);
-  console.timeEnd("MULTIPLY");
+/* ================= PROGRAM ================= */
+// Nie używamy "sparse" (które nie trzyma '0' w pamięci) gdyż z jakiegoś powodu odwracanie macierzy jest wtedy 2 razy wolniejsze
+const A = math.matrix(math.zeros(SIZE ** 2, SIZE ** 2));
+const B = math.matrix(math.zeros(SIZE ** 2));
 
-  return S;
+for (let y = 1; y <= SIZE; y++) {
+  for (let x = 1; x <= SIZE; x++) {
+    const point: Point = [x, y];
+    const topPoint = getPointOnTop(point);
+    const bottomPoint = getPointOnBottom(point);
+    const leftPoint = getPointOnLeft(point);
+    const rightPoint = getPointOnRight(point);
+    const topTemp = getTemperature(topPoint);
+    const bottomTemp = getTemperature(bottomPoint);
+    const leftTemp = getTemperature(leftPoint);
+    const rightTemp = getTemperature(rightPoint);
+
+    A.set([linearizePointWithoutEdges(point), linearizePointWithoutEdges(point)], -4);
+    if (topTemp === undefined) {
+      A.set([linearizePointWithoutEdges(topPoint), linearizePointWithoutEdges(point)], 1);
+    }
+    if (bottomTemp === undefined) {
+      A.set([linearizePointWithoutEdges(bottomPoint), linearizePointWithoutEdges(point)], 1);
+    }
+    if (leftTemp === undefined) {
+      A.set([linearizePointWithoutEdges(leftPoint), linearizePointWithoutEdges(point)], 1);
+    }
+    if (rightTemp === undefined) {
+      A.set([linearizePointWithoutEdges(rightPoint), linearizePointWithoutEdges(point)], 1);
+    }
+
+    const sum = sumDefined([topTemp, bottomTemp, leftTemp, rightTemp]);
+    B.set([linearizePointWithoutEdges(point)], -sum);
+  }
+}
+
+const S = solveEquation(A, B);
+
+/* ================= DRAW ================= */
+const sketch = (p: p5) => {
+  p.setup = function () {
+    p.createCanvas(SIZE + 2, SIZE + 2);
+    p.noLoop();
+  };
+
+  p.draw = function () {
+    p.background(0);
+
+    const minValue = Math.min(BOTTOM, LEFT, TOP, RIGHT);
+    const maxValue = Math.max(BOTTOM, LEFT, TOP, RIGHT);
+
+    p.loadPixels();
+
+    for (let y = 0; y <= SIZE + 1; y++) {
+      for (let x = 0; x <= SIZE + 1; x++) {
+        if ((x === 0 || x === SIZE + 1) && (x === y || x === SIZE + 1 - y)) {
+          continue;
+        }
+
+        const point: Point = [x, y];
+        const canvasPoint: Point = [x, SIZE + 1 - y];
+        const temp = getTemperature(point) ?? S.get([linearizePointWithoutEdges(point)]);
+        const linearPosition = linearizePoint(canvasPoint) * 4;
+        const red = p.map(temp, minValue, maxValue, 200, 30);
+        const green = p.map(temp, minValue, maxValue, 30, 255);
+        const blue = 0;
+
+        p.pixels[linearPosition] = red;
+        p.pixels[linearPosition + 1] = green;
+        p.pixels[linearPosition + 2] = blue;
+        p.pixels[linearPosition + 3] = 255;
+      }
+    }
+    p.updatePixels();
+  };
 };
 
-const format = (m: math.Matrix) => {
+new p5(sketch);
+
+/* ================= UTILS ================= */
+function solveEquation(A: math.Matrix, B: math.Matrix) {
+  const A1 = math.inv(A);
+  const S = math.multiply(A1, B);
+
+  return S;
+}
+
+function stringifyMatrix(m: math.Matrix) {
   return m
     .toArray()
     .map((a) => {
@@ -21,20 +104,36 @@ const format = (m: math.Matrix) => {
       return `| ${paddedA} |`;
     })
     .join("\n");
-};
-
-const x_max = 10;
-const y_max = 10;
-
-const BOTTOM = 150;
-const LEFT = 100;
-const TOP = 200;
-const RIGHT = 50;
+}
 
 type Point = [x: number, y: number];
 
-const getTemperature = ([x, y]: Point): number | undefined => {
-  if (x !== 0 && x !== x_max && y !== 0 && y !== y_max) {
+function getPointOnBottom([x, y]: Point): Point {
+  return [x, y - 1];
+}
+function getPointOnTop([x, y]: Point): Point {
+  return [x, y + 1];
+}
+function getPointOnLeft([x, y]: Point): Point {
+  return [x - 1, y];
+}
+function getPointOnRight([x, y]: Point): Point {
+  return [x + 1, y];
+}
+
+function sumDefined(numbers: (number | undefined)[]) {
+  return numbers.filter((n): n is number => n !== undefined).reduce((acc, n) => acc + n, 0);
+}
+
+function linearizePointWithoutEdges([x, y]: Point) {
+  return x - 1 + (y - 1) * SIZE;
+}
+function linearizePoint([x, y]: Point) {
+  return x + y * (SIZE + 2);
+}
+
+function getTemperature([x, y]: Point): number | undefined {
+  if (x !== 0 && x !== SIZE + 1 && y !== 0 && y !== SIZE + 1) {
     return undefined;
   }
 
@@ -42,7 +141,7 @@ const getTemperature = ([x, y]: Point): number | undefined => {
     return LEFT;
   }
 
-  if (x === x_max) {
+  if (x === SIZE + 1) {
     return RIGHT;
   }
 
@@ -50,80 +149,7 @@ const getTemperature = ([x, y]: Point): number | undefined => {
     return BOTTOM;
   }
 
-  if (y === y_max) {
+  if (y === SIZE + 1) {
     return TOP;
   }
-};
-
-const getOnBottom = ([x, y]: Point): Point => {
-  return [x, y - 1];
-};
-const getOnTop = ([x, y]: Point): Point => {
-  return [x, y + 1];
-};
-const getOnLeft = ([x, y]: Point): Point => {
-  return [x - 1, y];
-};
-const getOnRight = ([x, y]: Point): Point => {
-  return [x + 1, y];
-};
-
-const sumDefined = (numbers: (number | undefined)[]) =>
-  numbers.filter((n): n is number => n !== undefined).reduce((acc, n) => acc + n, 0);
-
-const SIZE = x_max * y_max - x_max - y_max + 1;
-const A = math.matrix(math.zeros(SIZE, SIZE));
-const B = math.matrix(math.zeros(SIZE));
-
-const linearalizePoint = ([x, y]: Point) => x - 1 + (y - 1) * (x_max - 1);
-
-console.time("TOTAL");
-console.time("FILL MATRIX");
-for (let y = 1; y < y_max; y++) {
-  for (let x = 1; x < x_max; x++) {
-    const point: Point = [x, y];
-    const topPoint = getOnTop(point);
-    const bottomPoint = getOnBottom(point);
-    const leftPoint = getOnLeft(point);
-    const rightPoint = getOnRight(point);
-    const topTemp = getTemperature(topPoint);
-    const bottomTemp = getTemperature(bottomPoint);
-    const leftTemp = getTemperature(leftPoint);
-    const rightTemp = getTemperature(rightPoint);
-
-    A.set([linearalizePoint(point), linearalizePoint(point)], -4);
-    if (topTemp === undefined) {
-      A.set([linearalizePoint(topPoint), linearalizePoint(point)], 1);
-    }
-    if (bottomTemp === undefined) {
-      A.set([linearalizePoint(bottomPoint), linearalizePoint(point)], 1);
-    }
-    if (leftTemp === undefined) {
-      A.set([linearalizePoint(leftPoint), linearalizePoint(point)], 1);
-    }
-    if (rightTemp === undefined) {
-      A.set([linearalizePoint(rightPoint), linearalizePoint(point)], 1);
-    }
-
-    const sum = sumDefined([topTemp, bottomTemp, leftTemp, rightTemp]);
-    B.set([linearalizePoint(point)], -sum);
-  }
 }
-console.timeEnd("FILL MATRIX");
-
-console.time("SOLVE");
-const S = solveEquation(A, B);
-console.timeEnd("SOLVE");
-console.timeEnd("TOTAL");
-// console.log(format(A));
-// console.log(format(B));
-// for (let y = 1; y < y_max; y++) {
-//   for (let x = 1; x < x_max; x++) {
-//     const point: Point = [x, y];
-//     const linearPosition = linearalizePoint(point);
-
-//     console.log([x, y], S.get([linearPosition, 0]));
-//   }
-// }
-
-// console.log(S.toArray().length);

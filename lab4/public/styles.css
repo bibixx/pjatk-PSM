@@ -1,46 +1,24 @@
+body,
+html {
+  height: 100%;
+}
+
 body {
-  padding: 2rem 7rem;
-  max-width: unset;
-  --nth-background: rgba(0, 0, 0, 0.1);
-  --hover-background: rgba(0, 0, 0, 0.3);
+  margin: 0;
+  background: #000;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    --nth-background: rgba(255, 255, 255, 0.1);
-    --hover-background: rgba(255, 255, 255, 0.2);
-  }
-}
-
-table {
+main {
   width: 100%;
-  margin: 2rem 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-table tbody tr:nth-child(2n + 1) {
-  background: var(--nth-background);
-}
-
-table tbody tr:hover {
-  background: var(--hover-background);
-}
-
-tbody td:not(:first-child) {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-thead th {
-  text-align: left;
-}
-
-.chart-options-container {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  grid-gap: 2rem;
-}
-
-.tables-wrapper {
-  width: 100%;
-  overflow: auto;
+.p5Canvas {
+  height: 100% !important;
+  width: auto !important;
+  image-rendering: pixelated;
+  aspect-ratio: 1 / 1;
 }
