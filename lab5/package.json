@@ -1,0 +1,26 @@
+{
+  "name": "lab1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:serve": "browser-sync public --port 3000 --server --files 'public/*'",
+    "start:build": "npm run build -- --watch",
+    "start": "concurrently 'npm:start:build' 'npm:start:serve'",
+    "build": "esbuild ./src/*.ts --target=chrome100 --outdir=public --bundle",
+    "bundle": "inline-script-tags public/index.html public/index.html.tmp && inline-stylesheets public/index.html.tmp build/index.html && rm public/index.html.tmp"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "@types/p5": "^1.4.2",
+    "browser-sync": "^2.27.9",
+    "concurrently": "^7.1.0",
+    "esbuild": "^0.14.31",
+    "inline-scripts": "^1.7.4",
+    "p5": "^1.4.1",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.2"
+  }
+}
