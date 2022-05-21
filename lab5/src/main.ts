@@ -1,4 +1,4 @@
-/* ================= UI ================= */
+/* ================= GAME LOGIC ================= */
 let SIZE_X = 60;
 let SIZE_Y = 40;
 let ANIMATION_FRAME_LENGTH = 100;
