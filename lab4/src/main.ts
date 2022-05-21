@@ -6,7 +6,7 @@ const BOTTOM = 150;
 const LEFT = 100;
 const TOP = 50;
 const RIGHT = 200;
-const SIZE = 40;
+const SIZE = 10;
 
 /* ================= PROGRAM ================= */
 // Nie używamy "sparse" (które nie trzyma '0' w pamięci) gdyż z jakiegoś powodu odwracanie macierzy jest wtedy 2 razy wolniejsze
@@ -122,6 +122,7 @@ const sketch = (p: p5) => {
 
   p.draw = function () {
     p.background(0);
+    p.pixelDensity(1);
 
     const minValue = Math.min(BOTTOM, LEFT, TOP, RIGHT);
     const maxValue = Math.max(BOTTOM, LEFT, TOP, RIGHT);
