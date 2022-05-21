@@ -386,8 +386,11 @@ let oldSizeX = SIZE_X;
 let oldSizeY = SIZE_Y;
 const $gameContainer = document.querySelector<HTMLInputElement>(".container")!;
 const $fullScreenCheckbox = document.querySelector<HTMLInputElement>("#full-screen")!;
-$fullScreenCheckbox.addEventListener("change", () => {
-  if ($fullScreenCheckbox.checked) {
+
+function setFullScreen(isOn: boolean) {
+  $fullScreenCheckbox.checked = isOn;
+
+  if (isOn) {
     oldSizeX = SIZE_X;
     oldSizeY = SIZE_Y;
 
@@ -409,7 +412,13 @@ $fullScreenCheckbox.addEventListener("change", () => {
 
   $gameContainer.classList.remove("container--full-screen");
   resizeBoard(oldSizeX, oldSizeY);
+}
+
+$fullScreenCheckbox.addEventListener("change", () => {
+  setFullScreen($fullScreenCheckbox.checked);
 });
+
+setFullScreen(true);
 
 /* ================= DEBUG ================= */
 (window as any).translatePlaintextToPreset = (plaintext: string, [xOffset, yOffset]: Point = [0, 0]) => {
