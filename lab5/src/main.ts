@@ -384,6 +384,32 @@ $loopEdgesCheckbox.addEventListener("change", () => {
   LOOP_EDGES = $loopEdgesCheckbox.checked;
 });
 
+document.querySelector("#plaintext-button")!.addEventListener("click", () => {
+  const $input = document.querySelector<HTMLInputElement>("#plaintext")!;
+
+  if ($input.value.length === 0 || !/[.oO\n]+/.test($input.value)) {
+    return;
+  }
+
+  pause();
+
+  const data = translatePlaintextToPreset($input.value.toUpperCase());
+  const minX = Math.max(...data.map(([y, x]) => x));
+  const minY = Math.max(...data.map(([y, x]) => y));
+
+  resizeBoard(Math.max(SIZE_X, minX), Math.max(SIZE_Y, minY));
+  currentState = getStateArray();
+
+  data.forEach(([y, x]) => (currentState[y][x] = true));
+
+  drawState(currentState);
+});
+document.querySelector("#plaintext-clear")!.addEventListener("click", () => {
+  const $input = document.querySelector<HTMLInputElement>("#plaintext")!;
+
+  $input.value = "";
+});
+
 let oldSizeX = SIZE_X;
 let oldSizeY = SIZE_Y;
 const $gameContainer = document.querySelector<HTMLInputElement>(".container")!;
@@ -423,10 +449,11 @@ $fullScreenCheckbox.addEventListener("change", () => {
 setFullScreen(true);
 
 /* ================= DEBUG ================= */
-(window as any).translatePlaintextToPreset = (plaintext: string, [xOffset, yOffset]: Point = [0, 0]) => {
+function translatePlaintextToPreset(plaintext: string, [xOffset, yOffset]: Point = [0, 0]) {
   const preset = plaintext
     .trim()
     .split("\n")
+    .filter((row) => !row.startsWith("!"))
     .map((row, y) =>
       row.split("").reduce<Point[]>((acc, character, x) => {
         if (character === "O") {
@@ -438,5 +465,8 @@ setFullScreen(true);
     )
     .flat();
 
-  return JSON.stringify(preset);
-};
+  return preset;
+}
+
+(window as any).translatePlaintextToPreset = (...args: Parameters<typeof translatePlaintextToPreset>) =>
+  JSON.stringify(translatePlaintextToPreset(...args));

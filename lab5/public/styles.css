@@ -14,7 +14,8 @@ body {
 button:not(:disabled),
 input[type="checkbox"]:not(:disabled),
 input[type="range"]:not(:disabled),
-label {
+label,
+details summary {
   cursor: pointer;
 }
 
@@ -142,4 +143,28 @@ label {
     transform: translateY(0%);
     opacity: 1;
   }
+}
+
+#plaintext {
+  width: 100%;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
+}
+
+.plaintext-container-header {
+  margin-top: 0.25rem;
+}
+
+details[open] .plaintext-container-header {
+  margin-bottom: 0.25em;
+}
+
+p {
+  margin: 0.5rem 0;
+}
+
+a,
+a:visited {
+  color: #0069c2;
 }
